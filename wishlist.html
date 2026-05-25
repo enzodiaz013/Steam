@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steam — Wishlist</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a class="logo" href="store.html">
+    <svg viewBox="0 0 148 148" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="74" cy="74" r="74" fill="#1b2838"/><path d="M74 18C43.1 18 18 43.1 18 74c0 24.8 15.7 46 37.9 54l13.9-57.4c-1.2-2.3-1.9-4.9-1.9-7.6 0-9.4 7.6-17 17-17s17 7.6 17 17-7.6 17-17 17c-.5 0-1 0-1.5-.1L27.9 93.4C33.4 113.6 52.2 128 74 128c30.9 0 56-25.1 56-56S104.9 18 74 18z" fill="#c6d4df"/><circle cx="85" cy="63" r="10" fill="#1b2838"/></svg>
+    STEAM
+  </a>
+  <nav>
+    <a href="store.html">TIENDA</a>
+    <a href="community.html">COMUNIDAD</a>
+    <a href="dashboard.html">BIBLIOTECA</a>
+    <a href="about.html">ACERCA DE</a>
+    <a href="support.html">SOPORTE</a>
+  </nav>
+  <div class="header-right">
+    <a href="wallet.html" class="wallet-link" id="wallet-balance">💰 $0.00</a>
+    <a href="wishlist.html" class="wishlist-link">♥ <span id="wishlist-count" class="wishlist-count" style="display:none">0</span></a>
+    <a href="cart.html" class="cart-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cart-badge" class="cart-badge" style="display:none">0</span>
+    </a>
+    <div id="header-user-zone"></div>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <a href="store.html">Tienda</a> <span>›</span> <span>Mi Wishlist</span>
+</div>
+
+<div class="page-wrap" style="margin-top:20px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+    <div>
+      <h1 style="font-size:24px;font-weight:700;margin-bottom:4px">♥ Mi Wishlist</h1>
+      <p style="font-size:13px;color:var(--text-dim)">Recibirás alertas cuando los precios bajen</p>
+    </div>
+    <div style="font-size:13px;color:var(--text-dim)" id="wish-count-label"></div>
+  </div>
+
+  <div id="wishlist-container"></div>
+</div>
+
+<footer><p>&copy; 2024 Valve Corporation. Todos los derechos reservados.</p></footer>
+
+<script src="games.js"></script>
+<script>
+  initHeader();
+
+  function render() {
+    const ids = Wishlist.get();
+    const container = document.getElementById('wishlist-container');
+    document.getElementById('wish-count-label').textContent = `${ids.length} juego${ids.length !== 1 ? 's' : ''}`;
+
+    if (ids.length === 0) {
+      container.innerHTML = `
+        <div class="cart-empty">
+          <div class="cart-empty-icon">♡</div>
+          <h2>Tu wishlist está vacía</h2>
+          <p>Agregá juegos que te interesen desde la tienda o el detalle de cada juego.</p>
+          <a href="store.html" class="btn-blue" style="display:inline-block;width:auto;padding:12px 32px;margin-top:8px">IR A LA TIENDA</a>
+        </div>`;
+      return;
+    }
+
+    const games = ids.map(id => GAMES.find(g => g.id === id)).filter(Boolean);
+
+    container.innerHTML = games.map(g => {
+      const inCart = Cart.has(g.id);
+      const owned  = isOwned(g.id);
+      return `
+        <div class="wishlist-item" id="wi-${g.id}">
+          <a href="game.html?id=${g.id}">
+            <img class="wish-img" src="${g.image}" alt="${g.title}" onerror="this.style.background='#1e3a52'">
+          </a>
+          <div class="wish-body">
+            <a href="game.html?id=${g.id}" class="wish-title">${g.title}</a>
+            <div class="wish-tags">${g.tags.slice(0,4).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+            <p class="wish-desc">${g.shortDesc}</p>
+            <div class="wish-footer">
+              <div class="wish-price">${priceHTML(g)}</div>
+              <div class="wish-btns">
+                ${g.free
+                  ? `<a href="game.html?id=${g.id}" class="wish-btn-cart">Jugar gratis</a>`
+                  : owned
+                    ? `<button class="wish-btn-cart" style="background:linear-gradient(135deg,#7b4e9e,#5a3280)" onclick="wishGiftGame(${g.id})">🎁 Regalar</button>`
+                    : inCart
+                      ? `<button class="wish-btn-cart" onclick="window.location='cart.html'" style="background:#2a5a2a">En el carrito ✓</button>`
+                      : `<button class="wish-btn-cart" id="wb-${g.id}" onclick="addToCart(${g.id},this)">+ Al carrito</button>`}
+                <button class="wish-btn-remove" onclick="removeWish(${g.id})">✕ Quitar</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function removeWish(id) {
+    const el = document.getElementById(`wi-${id}`);
+    if (el) { el.style.opacity='0'; el.style.transform='translateX(20px)'; el.style.transition='all .3s'; }
+    setTimeout(() => { Wishlist.toggle(id); render(); }, 300);
+  }
+
+  function addToCart(id, btn) {
+    const game = GAMES.find(g => g.id === id);
+    showBuyChoiceModal(game, function(type, friend, msg) {
+      if (type === 'me') {
+        Cart.add(id);
+        window.location.href = 'cart.html';
+      } else {
+        sessionStorage.setItem('steam_gift', JSON.stringify({ friend, msg, gameTitle: game.title }));
+        Cart.add(id);
+        window.location.href = 'checkout.html';
+      }
+    });
+  }
+
+  function wishGiftGame(id) {
+    const game = GAMES.find(g => g.id === id);
+    showBuyChoiceModal(game, function(type, friend, msg) {
+      if (type === 'friend') {
+        sessionStorage.setItem('steam_gift', JSON.stringify({ friend, msg, gameTitle: game.title }));
+        Cart.add(id);
+        window.location.href = 'checkout.html';
+      }
+    });
+    setTimeout(() => { window._bcForFriend && window._bcForFriend(); }, 30);
+  }
+
+  render();
+</script>
+</body>
+</html>

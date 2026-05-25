@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steam — Comunidad</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a class="logo" href="store.html">
+    <svg viewBox="0 0 148 148" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="74" cy="74" r="74" fill="#1b2838"/><path d="M74 18C43.1 18 18 43.1 18 74c0 24.8 15.7 46 37.9 54l13.9-57.4c-1.2-2.3-1.9-4.9-1.9-7.6 0-9.4 7.6-17 17-17s17 7.6 17 17-7.6 17-17 17c-.5 0-1 0-1.5-.1L27.9 93.4C33.4 113.6 52.2 128 74 128c30.9 0 56-25.1 56-56S104.9 18 74 18z" fill="#c6d4df"/><circle cx="85" cy="63" r="10" fill="#1b2838"/></svg>
+    STEAM
+  </a>
+  <nav>
+    <a href="store.html">TIENDA</a>
+    <a href="community.html" class="active">COMUNIDAD</a>
+    <a href="dashboard.html">BIBLIOTECA</a>
+    <a href="about.html">ACERCA DE</a>
+    <a href="support.html">SOPORTE</a>
+  </nav>
+  <div class="header-right">
+    <a href="wallet.html" class="wallet-link" id="wallet-balance">💰 $0.00</a>
+    <a href="wishlist.html" class="wishlist-link">♡ <span id="wishlist-count" class="wishlist-count" style="display:none">0</span></a>
+    <a href="cart.html" class="cart-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cart-badge" class="cart-badge" style="display:none">0</span>
+    </a>
+    <div id="header-user-zone"></div>
+  </div>
+</header>
+
+<div class="community-hero">
+  <h1>Comunidad Steam</h1>
+  <p>Conectate con millones de jugadores, compartí logros, reseñas y mucho más.</p>
+</div>
+
+<!-- NAV TABS -->
+<div style="background:var(--darker);border-bottom:1px solid var(--border)">
+  <div style="max-width:1300px;margin:0 auto;padding:0 20px;display:flex;gap:4px">
+    <button class="comm-tab active" onclick="showTab('activity',this)">Actividad</button>
+    <button class="comm-tab" onclick="showTab('amigos',this)">Amigos</button>
+    <button class="comm-tab" onclick="showTab('foros',this)">Foros</button>
+    <button class="comm-tab" onclick="showTab('logros',this)">Logros</button>
+  </div>
+</div>
+
+<style>
+  .comm-tab { background:none; border:none; color:var(--text-dim); font-size:13px; font-weight:600; padding:14px 18px; cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; }
+  .comm-tab:hover { color:var(--text); }
+  .comm-tab.active { color:var(--text); border-bottom-color:var(--blue); }
+  .comm-panel { display:none; }
+  .comm-panel.active { display:block; }
+</style>
+
+<div class="page-wrap" style="margin-top:24px">
+
+  <!-- ACTIVITY -->
+  <div class="comm-panel active" id="panel-activity">
+    <div class="community-grid">
+      <div>
+        <h3 class="section-label">Actividad reciente</h3>
+        <div class="activity-feed">
+          <div class="activity-card">
+            <div class="activity-avatar" style="background:#1a6496">M</div>
+            <div class="activity-info">
+              <div class="activity-user">Matigamer99</div>
+              <div class="activity-action">Desbloqueó el logro <span class="activity-game">"Maestro del Caos"</span> en <span class="activity-game">Elden Ring</span></div>
+            </div>
+            <span class="activity-time">hace 5m</span>
+          </div>
+          <div class="activity-card">
+            <div class="activity-avatar" style="background:#4c7a1e">R</div>
+            <div class="activity-info">
+              <div class="activity-user">Rickyboss100</div>
+              <div class="activity-action">Está jugando <span class="activity-game">Baldur's Gate 3</span> — 247 hs en total</div>
+            </div>
+            <span class="activity-time">ahora</span>
+          </div>
+          <div class="activity-card">
+            <div class="activity-avatar" style="background:#8e44ad">L</div>
+            <div class="activity-info">
+              <div class="activity-user">LunaGamer</div>
+              <div class="activity-action">Reseñó <span class="activity-game">Stardew Valley</span> con una crítica positiva</div>
+            </div>
+            <span class="activity-time">hace 32m</span>
+          </div>
+          <div class="activity-card">
+            <div class="activity-avatar" style="background:#c0392b">K</div>
+            <div class="activity-info">
+              <div class="activity-user">KaiserPro</div>
+              <div class="activity-action">Completó <span class="activity-game">Hollow Knight</span> al 100%</div>
+            </div>
+            <span class="activity-time">hace 1h</span>
+          </div>
+          <div class="activity-card">
+            <div class="activity-avatar" style="background:#e67e22">P</div>
+            <div class="activity-info">
+              <div class="activity-user">PixelNerd</div>
+              <div class="activity-action">Agregó <span class="activity-game">Cyberpunk 2077</span> a su wishlist</div>
+            </div>
+            <span class="activity-time">hace 2h</span>
+          </div>
+          <div class="activity-card">
+            <div class="activity-avatar" style="background:#16a085">Z</div>
+            <div class="activity-info">
+              <div class="activity-user">ZephyrPlay</div>
+              <div class="activity-action">Compró <span class="activity-game">The Witcher 3</span> aprovechando -75%</div>
+            </div>
+            <span class="activity-time">hace 3h</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="friends-panel">
+          <h3>Amigos en línea</h3>
+          <div class="friend-item">
+            <div class="friend-avatar" style="background:#4c7a1e">R</div>
+            <div class="friend-name">Rickyboss100</div>
+            <span class="friend-status status-ingame">🎮 En juego</span>
+          </div>
+          <div class="friend-item">
+            <div class="friend-avatar" style="background:#1a6496">M</div>
+            <div class="friend-name">Matigamer99</div>
+            <span class="friend-status status-online">● En línea</span>
+          </div>
+          <div class="friend-item">
+            <div class="friend-avatar" style="background:#8e44ad">L</div>
+            <div class="friend-name">LunaGamer</div>
+            <span class="friend-status status-ingame">🎮 En juego</span>
+          </div>
+          <div class="friend-item">
+            <div class="friend-avatar" style="background:#c0392b">K</div>
+            <div class="friend-name">KaiserPro</div>
+            <span class="friend-status status-offline">● Desconectado</span>
+          </div>
+          <div class="friend-item">
+            <div class="friend-avatar" style="background:#e67e22">P</div>
+            <div class="friend-name">PixelNerd</div>
+            <span class="friend-status status-offline">● Desconectado</span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:16px">
+          <h3 style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px">Agregar amigo</h3>
+          <div style="display:flex;gap:8px">
+            <input type="text" class="filter-search" placeholder="Código de amigo..." style="flex:1">
+            <button class="btn-blue" style="padding:8px 14px;font-size:12px">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMIGOS -->
+  <div class="comm-panel" id="panel-amigos">
+    <h3 class="section-label">Lista de amigos</h3>
+    <div style="background:var(--panel2);border:1px solid var(--border);border-radius:4px;padding:24px;text-align:center;max-width:500px">
+      <div style="font-size:48px;margin-bottom:16px">👥</div>
+      <h3 style="margin-bottom:8px">Agregá amigos para jugar juntos</h3>
+      <p style="color:var(--text-dim);font-size:13px;margin-bottom:20px">Ingresá el código Steam de tu amigo o buscalo por nombre.</p>
+      <div style="display:flex;gap:10px;max-width:360px;margin:0 auto">
+        <input type="text" class="filter-search" style="flex:1" placeholder="Nombre o código...">
+        <button class="btn-blue" style="padding:9px 16px;font-size:13px">Buscar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOROS -->
+  <div class="comm-panel" id="panel-foros">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <h3 class="section-label" style="margin:0">Foros populares</h3>
+      <input type="text" class="filter-search" placeholder="Buscar en foros..." style="width:220px" oninput="filterForums(this.value)">
+    </div>
+    <div id="foros-list" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- LOGROS -->
+  <div class="comm-panel" id="panel-logros">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <h3 class="section-label" style="margin:0">Tus logros</h3>
+      <span id="logros-count" style="font-size:13px;color:var(--text-dim)"></span>
+    </div>
+    <div id="logros-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px"></div>
+    <div style="margin-top:24px;background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:16px">
+      <h4 style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:14px">Logros de juegos (globales)</h4>
+      <div id="game-achievements-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer><p>&copy; 2024 Valve Corporation. Todos los derechos reservados.</p></footer>
+
+<script src="games.js"></script>
+<script>
+  initHeader();
+
+  const FORUMS = [
+    {title:'Guía completa Elden Ring: Jefes opcionales y secretos', game:'Elden Ring', tag:'Guía', replies:234, views:'12.4K', hot:true},
+    {title:'Mejores builds para Baldur\'s Gate 3 — Temporada 4', game:'Baldur\'s Gate 3', tag:'Builds', replies:189, views:'8.2K', hot:true},
+    {title:'Error de conexión en CS2 — Solución oficial del equipo', game:'Counter-Strike 2', tag:'Soporte', replies:567, views:'31.1K', hot:false},
+    {title:'Workshop: Los 10 mejores mods de Stardew Valley 2024', game:'Stardew Valley', tag:'Mods', replies:98, views:'5.7K', hot:false},
+    {title:'Guía de dificultad Sekiro para principiantes absolutos', game:'Sekiro', tag:'Guía', replies:145, views:'7.3K', hot:false},
+    {title:'Cyberpunk 2077: Todos los finales posibles — Spoilers', game:'Cyberpunk 2077', tag:'Lore', replies:312, views:'19.8K', hot:true},
+    {title:'Hollow Knight: Ruta óptima para el 100%', game:'Hollow Knight', tag:'Guía', replies:77, views:'3.1K', hot:false},
+    {title:'Red Dead Redemption 2: Easter eggs ocultos', game:'RDR2', tag:'Comunidad', replies:203, views:'9.4K', hot:false},
+    {title:'God of War PC: Configuración óptima para 60+ fps', game:'God of War', tag:'Técnico', replies:441, views:'22.7K', hot:true},
+    {title:'Celeste: consejos para el Capítulo 9 B-Side', game:'Celeste', tag:'Guía', replies:55, views:'2.9K', hot:false},
+  ];
+
+  const TAG_COLORS = { Guía:'#1a6496', Builds:'#4c7a1e', Soporte:'#8e44ad', Mods:'#c0392b', Lore:'#e67e22', Comunidad:'#16a085', Técnico:'#2980b9' };
+
+  function renderForumItem(f) {
+    const tagColor = TAG_COLORS[f.tag] || '#555';
+    return `<div class="forum-row" onclick="toast('Foro de ${f.game} — función próximamente', 'info')">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+        <span style="background:${tagColor};color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:3px;flex-shrink:0">${f.tag}</span>
+        <div style="min-width:0">
+          <div style="font-size:14px;font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.title}${f.hot ? ' <span style="color:#e87c7c;font-size:11px">🔥</span>' : ''}</div>
+          <div style="font-size:12px;color:var(--text-dim)">${f.game}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:20px;font-size:12px;color:var(--text-dim);flex-shrink:0;margin-left:16px">
+        <span title="Respuestas">💬 ${f.replies}</span>
+        <span title="Vistas">👁 ${f.views}</span>
+      </div>
+    </div>`;
+  }
+
+  function renderForums(list) {
+    document.getElementById('foros-list').innerHTML = list.length
+      ? list.map(renderForumItem).join('')
+      : '<p style="color:var(--text-dim);font-size:13px;padding:20px 0">Sin resultados.</p>';
+  }
+
+  function filterForums(q) {
+    const lq = q.toLowerCase();
+    renderForums(q ? FORUMS.filter(f => f.title.toLowerCase().includes(lq) || f.game.toLowerCase().includes(lq)) : FORUMS);
+  }
+
+  /* ---- LOGROS ---- */
+  const STEAM_ACHIEVEMENTS = [
+    {icon:'🏆', name:'Primer Paso', desc:'Iniciaste sesión por primera vez', unlocked:true},
+    {icon:'🎮', name:'Coleccionista', desc:'Tenés 3+ juegos en tu biblioteca', unlocked:true},
+    {icon:'💰', name:'Inversor', desc:'Cargaste saldo Steam por primera vez', unlocked: Wallet.get() > 0},
+    {icon:'♥', name:'Curioso', desc:'Agregaste un juego a tu wishlist', unlocked: Wishlist.count() > 0},
+    {icon:'🛒', name:'Primera Compra', desc:'Completaste tu primera compra', unlocked: JSON.parse(localStorage.getItem('steam_library')||'[]').length > 0},
+    {icon:'⭐', name:'Crítico', desc:'Escribiste tu primera reseña', unlocked:false},
+    {icon:'🔥', name:'Maratón', desc:'Jugaste más de 10 juegos distintos', unlocked:false},
+    {icon:'👑', name:'Leyenda', desc:'Alcanzaste el nivel 5 de cuenta', unlocked:false},
+  ];
+
+  const GAME_ACHIEVEMENTS = [
+    {game:'Elden Ring', icon:'⚔️', name:'Así empieza la leyenda', desc:'Derrota a Margit, el Presagio Caído', pct:68},
+    {game:'Baldur\'s Gate 3', icon:'🧙', name:'Maestro de la táctica', desc:'Gana 10 combates consecutivos', pct:41},
+    {game:'Hollow Knight', icon:'🦋', name:'Sueños de mariposa', desc:'Visita el País de los Sueños', pct:29},
+    {game:'Stardew Valley', icon:'🌾', name:'Granjero perfecto', desc:'Alcanza nivel 10 en todas las habilidades', pct:15},
+    {game:'Cyberpunk 2077', icon:'🤖', name:'Mercenario de élite', desc:'Completa 50 contratos en Night City', pct:22},
+  ];
+
+  function renderAchievements() {
+    const unlocked = STEAM_ACHIEVEMENTS.filter(a => a.unlocked).length;
+    document.getElementById('logros-count').textContent = `${unlocked} / ${STEAM_ACHIEVEMENTS.length} desbloqueados`;
+
+    document.getElementById('logros-grid').innerHTML = STEAM_ACHIEVEMENTS.map(a => `
+      <div style="background:var(--panel2);border:1px solid ${a.unlocked ? 'var(--teal)' : 'var(--border)'};border-radius:6px;padding:16px;display:flex;gap:14px;align-items:center;opacity:${a.unlocked?1:0.5};transition:opacity .2s">
+        <div style="font-size:32px;filter:${a.unlocked?'none':'grayscale(1)'}">${a.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:700;margin-bottom:3px">${a.name}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-bottom:5px">${a.desc}</div>
+          <div style="font-size:11px;color:${a.unlocked?'var(--teal)':'var(--text-dim)'};font-weight:600">${a.unlocked?'✓ Desbloqueado':'Bloqueado'}</div>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('game-achievements-list').innerHTML = GAME_ACHIEVEMENTS.map(a => `
+      <div style="background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:4px;padding:12px 16px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:24px">${a.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:600">${a.name}</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">${a.desc} — <span style="color:var(--blue-light)">${a.game}</span></div>
+          <div style="background:var(--border);border-radius:2px;height:4px;width:100%">
+            <div style="background:var(--blue);height:4px;border-radius:2px;width:${a.pct}%;transition:width .6s"></div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-dim);flex-shrink:0">${a.pct}%</div>
+      </div>`).join('');
+  }
+
+  function showTab(id, btn) {
+    document.querySelectorAll('.comm-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.comm-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+  }
+
+  /* init */
+  renderForums(FORUMS);
+  renderAchievements();
+</script>
+
+<style>
+  .forum-row {
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 4px;
+    padding: 14px 18px; cursor: pointer; display: flex; align-items: center;
+    gap: 12px; transition: border-color .15s;
+  }
+  .forum-row:hover { border-color: var(--blue); }
+</style>
+</body>
+</html>

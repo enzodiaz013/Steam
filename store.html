@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steam — Tienda</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a class="logo" href="store.html">
+    <svg viewBox="0 0 148 148" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="74" cy="74" r="74" fill="#1b2838"/><path d="M74 18C43.1 18 18 43.1 18 74c0 24.8 15.7 46 37.9 54l13.9-57.4c-1.2-2.3-1.9-4.9-1.9-7.6 0-9.4 7.6-17 17-17s17 7.6 17 17-7.6 17-17 17c-.5 0-1 0-1.5-.1L27.9 93.4C33.4 113.6 52.2 128 74 128c30.9 0 56-25.1 56-56S104.9 18 74 18z" fill="#c6d4df"/><circle cx="85" cy="63" r="10" fill="#1b2838"/></svg>
+    STEAM
+  </a>
+  <nav>
+    <a href="store.html" class="active">TIENDA</a>
+    <a href="community.html">COMUNIDAD</a>
+    <a href="dashboard.html">BIBLIOTECA</a>
+    <a href="about.html">ACERCA DE</a>
+    <a href="support.html">SOPORTE</a>
+  </nav>
+  <div class="header-right">
+    <a href="wallet.html" class="wallet-link" id="wallet-balance">💰 $0.00</a>
+    <a href="wishlist.html" class="wishlist-link" title="Wishlist">
+      ♡ <span id="wishlist-count" class="wishlist-count" style="display:none">0</span>
+    </a>
+    <a href="cart.html" class="cart-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cart-badge" class="cart-badge" style="display:none">0</span>
+    </a>
+    <div id="header-user-zone"></div>
+  </div>
+</header>
+
+<!-- FEATURED CAROUSEL -->
+<div class="featured-section" id="featured-section">
+  <div id="feat-slides"></div>
+  <div class="featured-thumbs" id="feat-thumbs"></div>
+  <button class="feat-prev" onclick="moveFeat(-1)">‹</button>
+  <button class="feat-next" onclick="moveFeat(1)">›</button>
+  <div class="feat-dots" id="feat-dots"></div>
+</div>
+
+<!-- STORE BODY -->
+<div class="store-page">
+
+  <!-- ROW: OFERTAS ESPECIALES -->
+  <section class="store-row-section">
+    <div class="row-header">
+      <h3>🔥 Ofertas especiales</h3>
+      <span class="row-see-all" onclick="filterByPrice('sale')">Ver todas →</span>
+    </div>
+    <div class="h-scroll" id="row-offers"></div>
+  </section>
+
+  <!-- ROW: MEJOR VALORADOS -->
+  <section class="store-row-section">
+    <div class="row-header">
+      <h3>⭐ Mejor valorados</h3>
+      <span class="row-see-all" onclick="sortBy('rating')">Ver todos →</span>
+    </div>
+    <div class="h-scroll" id="row-rated"></div>
+  </section>
+
+  <!-- ROW: JUEGOS GRATUITOS -->
+  <section class="store-row-section">
+    <div class="row-header">
+      <h3>🎁 Gratis para jugar</h3>
+      <span class="row-see-all" onclick="filterByPrice('free')">Ver todos →</span>
+    </div>
+    <div class="h-scroll" id="row-free"></div>
+  </section>
+
+  <!-- FULL CATALOG -->
+  <section>
+    <div class="row-header" style="margin-bottom:18px">
+      <h3>🎮 Explorar catálogo</h3>
+    </div>
+    <div class="catalog-layout">
+
+      <!-- Sidebar filtros -->
+      <aside class="filter-sidebar">
+        <div class="filter-block">
+          <h3>Buscar</h3>
+          <input type="text" id="search-input" class="filter-search" placeholder="Buscar juegos...">
+        </div>
+        <div class="filter-block">
+          <h3>Precio</h3>
+          <label class="filter-radio"><input type="radio" name="price" value="all" checked> Todos</label>
+          <label class="filter-radio"><input type="radio" name="price" value="free"> Solo gratis</label>
+          <label class="filter-radio"><input type="radio" name="price" value="sale"> En oferta</label>
+          <label class="filter-radio"><input type="radio" name="price" value="u10">  Menos de $10</label>
+          <label class="filter-radio"><input type="radio" name="price" value="u30">  $10 — $30</label>
+          <label class="filter-radio"><input type="radio" name="price" value="o30">  Más de $30</label>
+        </div>
+        <div class="filter-block">
+          <h3>Géneros</h3>
+          <div id="genre-filters"></div>
+        </div>
+        <button class="btn-clear-filters" id="btn-clear">Limpiar filtros</button>
+      </aside>
+
+      <!-- Main grid -->
+      <div class="catalog-main">
+        <div class="store-topbar">
+          <span id="result-count" class="result-count">20 juegos</span>
+          <select id="sort-select" class="sort-select">
+            <option value="relevance">Relevancia</option>
+            <option value="rating">Mejor valorados</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="az">Nombre A-Z</option>
+            <option value="discount">Mayor descuento</option>
+          </select>
+        </div>
+        <div id="games-grid" class="store-grid"></div>
+        <p id="no-results" class="no-results" style="display:none">No se encontraron juegos.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer><p>&copy; 2024 Valve Corporation. Todos los derechos reservados.</p></footer>
+
+<script src="games.js"></script>
+<script>
+  initHeader();
+
+  // ── FEATURED CAROUSEL ────────────────────────────────────────────
+  const FEATURED_IDS = [7, 6, 8]; // BG3, Elden Ring, RDR2
+  const FEATURED_EYEBROWS = ['Juego del Año 2023 🏆', 'RPG de Acción Épico ⚔️', 'Oferta especial -35% 🔥'];
+  let featIdx = 0;
+  let featTimer;
+
+  function renderFeatured() {
+    const slidesEl = document.getElementById('feat-slides');
+    const thumbsEl = document.getElementById('feat-thumbs');
+    const dotsEl   = document.getElementById('feat-dots');
+
+    slidesEl.innerHTML = FEATURED_IDS.map((id, i) => {
+      const g = GAMES.find(g => g.id === id);
+      const inCart = Cart.has(g.id);
+      const priceSection = g.discount > 0
+        ? `<div class="featured-price-row">
+             <span class="feat-price-badge">-${g.discount}%</span>
+             <span class="feat-price-original">$${g.originalPrice.toFixed(2)}</span>
+             <span class="feat-price-final">$${g.price.toFixed(2)}</span>
+           </div>`
+        : `<div class="featured-price-row"><span class="feat-price-final">$${g.price.toFixed(2)}</span></div>`;
+
+      return `
+        <div class="featured-slide ${i === 0 ? 'active' : ''}">
+          <div class="featured-bg" style="background-image:url('${g.image}')"></div>
+          <div class="featured-overlay">
+            <div class="featured-content">
+              <div class="feat-eyebrow"><span class="feat-eyebrow-dot"></span>${FEATURED_EYEBROWS[i]}</div>
+              <h2 class="featured-title">${g.title}</h2>
+              <div class="featured-tags">
+                ${g.genres.map(ge => `<span class="feat-tag">${ge}</span>`).join('')}
+                ${g.tags.slice(0,2).map(t => `<span class="feat-tag">${t}</span>`).join('')}
+              </div>
+              <p class="featured-desc">${g.shortDesc}</p>
+              ${priceSection}
+              <div class="featured-btns">
+                ${inCart
+                  ? `<button class="feat-btn-cart" onclick="window.location='cart.html'">En el carrito ✓</button>`
+                  : `<button class="feat-btn-cart" onclick="featAddCart(${g.id},this)">+ Agregar al carrito</button>`}
+                <button class="feat-btn-info" onclick="window.location='game.html?id=${g.id}'">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    thumbsEl.innerHTML = FEATURED_IDS.map((id, i) => {
+      const g = GAMES.find(g => g.id === id);
+      return `<img src="${g.image}" class="feat-thumb ${i === 0 ? 'active' : ''}" onclick="goFeat(${i})" alt="${g.title}">`;
+    }).join('');
+
+    dotsEl.innerHTML = FEATURED_IDS.map((_, i) =>
+      `<span class="feat-dot ${i === 0 ? 'active' : ''}" onclick="goFeat(${i})"></span>`
+    ).join('');
+  }
+
+  function goFeat(n) {
+    clearInterval(featTimer);
+    const slides = document.querySelectorAll('.featured-slide');
+    const thumbs = document.querySelectorAll('.feat-thumb');
+    const dots   = document.querySelectorAll('.feat-dot');
+    slides[featIdx].classList.remove('active');
+    thumbs[featIdx].classList.remove('active');
+    dots[featIdx].classList.remove('active');
+    featIdx = (n + FEATURED_IDS.length) % FEATURED_IDS.length;
+    slides[featIdx].classList.add('active');
+    thumbs[featIdx].classList.add('active');
+    dots[featIdx].classList.add('active');
+    featTimer = setInterval(() => moveFeat(1), 5000);
+  }
+
+  function moveFeat(dir) { goFeat(featIdx + dir); }
+
+  function featAddCart(id, btn) {
+    const game = GAMES.find(g => g.id === id);
+    showBuyChoiceModal(game, function(type, friend, msg) {
+      if (type === 'me') {
+        Cart.add(id);
+        btn.textContent = 'En el carrito ✓';
+        btn.onclick = () => window.location = 'cart.html';
+        window.location.href = 'cart.html';
+      } else {
+        sessionStorage.setItem('steam_gift', JSON.stringify({ friend, msg, gameTitle: game.title }));
+        Cart.add(id);
+        window.location.href = 'checkout.html';
+      }
+    });
+  }
+
+  renderFeatured();
+  featTimer = setInterval(() => moveFeat(1), 5000);
+
+  // ── HORIZONTAL ROWS ─────────────────────────────────────────────
+  function renderRow(containerId, games) {
+    document.getElementById(containerId).innerHTML = games.map(g => `
+      <div class="row-card" onclick="window.location='game.html?id=${g.id}'">
+        <img class="row-card-img" src="${g.image}" alt="${g.title}" loading="lazy" onerror="this.style.background='#1e3a52'">
+        <div class="row-card-body">
+          <div class="row-card-title">${g.title}</div>
+          <div class="row-card-price">${priceHTML(g)}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  renderRow('row-offers', GAMES.filter(g => g.discount > 0).sort((a,b) => b.discount - a.discount));
+  renderRow('row-rated',  [...GAMES].sort((a,b) => b.rating - a.rating).slice(0, 10));
+  renderRow('row-free',   GAMES.filter(g => g.free));
+
+  // ── GENRE CHECKBOXES ────────────────────────────────────────────
+  const allGenres = [...new Set(GAMES.flatMap(g => g.genres))].sort();
+  const genreContainer = document.getElementById('genre-filters');
+  allGenres.forEach(genre => {
+    const label = document.createElement('label');
+    label.className = 'filter-check';
+    label.innerHTML = `<input type="checkbox" value="${genre}"> ${genre}`;
+    genreContainer.appendChild(label);
+  });
+
+  // ── CATALOG ──────────────────────────────────────────────────────
+  function getFilters() {
+    return {
+      search: document.getElementById('search-input').value.toLowerCase().trim(),
+      price:  document.querySelector('input[name="price"]:checked').value,
+      genres: [...document.querySelectorAll('#genre-filters input:checked')].map(i => i.value),
+      sort:   document.getElementById('sort-select').value,
+    };
+  }
+
+  function filterGames(f) {
+    let list = [...GAMES];
+    if (f.search) list = list.filter(g => g.title.toLowerCase().includes(f.search) || g.tags.some(t => t.toLowerCase().includes(f.search)) || g.genres.some(ge => ge.toLowerCase().includes(f.search)));
+    if (f.price === 'free') list = list.filter(g => g.free);
+    if (f.price === 'sale') list = list.filter(g => g.discount > 0);
+    if (f.price === 'u10')  list = list.filter(g => !g.free && g.price < 10);
+    if (f.price === 'u30')  list = list.filter(g => !g.free && g.price >= 10 && g.price <= 30);
+    if (f.price === 'o30')  list = list.filter(g => !g.free && g.price > 30);
+    if (f.genres.length > 0) list = list.filter(g => f.genres.some(ge => g.genres.includes(ge)));
+    const sorts = { relevance: ()=>0, rating:(a,b)=>b.rating-a.rating, 'price-asc':(a,b)=>a.price-b.price, 'price-desc':(a,b)=>b.price-a.price, az:(a,b)=>a.title.localeCompare(b.title), discount:(a,b)=>b.discount-a.discount };
+    if (sorts[f.sort]) list.sort(sorts[f.sort]);
+    return list;
+  }
+
+  function renderGrid() {
+    const f = getFilters();
+    const list = filterGames(f);
+    document.getElementById('result-count').textContent = `${list.length} juego${list.length !== 1 ? 's' : ''}`;
+    const noResults = document.getElementById('no-results');
+    const grid = document.getElementById('games-grid');
+
+    if (list.length === 0) { grid.innerHTML = ''; noResults.style.display = 'block'; return; }
+    noResults.style.display = 'none';
+
+    grid.innerHTML = list.map(g => {
+      const inCart   = Cart.has(g.id);
+      const inWish   = Wishlist.has(g.id);
+      const owned    = isOwned(g.id);
+      const btnHTML  = g.free
+        ? `<a href="game.html?id=${g.id}" class="card-btn card-btn-free">Jugar gratis</a>`
+        : owned
+          ? `<button class="card-btn card-btn-gift" onclick="event.stopPropagation();storeGiftGame(${g.id})">🎁 Regalar</button>`
+          : inCart
+            ? `<button class="card-btn card-btn-incart" onclick="event.stopPropagation();window.location='cart.html'">En el carrito ✓</button>`
+            : `<button class="card-btn card-btn-add" onclick="event.stopPropagation();storeBuyChoice(${g.id},this)">+ Agregar</button>`;
+
+      return `
+        <div class="store-card" onclick="window.location='game.html?id=${g.id}'">
+          <div class="card-img-wrap">
+            <img src="${g.image}" alt="${g.title}" loading="lazy" onerror="this.style.background='#1e3a52'">
+            ${g.discount > 0 ? `<span class="card-discount-badge">-${g.discount}%</span>` : ''}
+            ${g.free ? `<span class="card-free-badge">GRATIS</span>` : ''}
+            <button class="card-wishlist-btn ${inWish?'wished':''}" onclick="event.stopPropagation();toggleWish(${g.id},this)" title="Wishlist">${inWish ? '♥' : '♡'}</button>
+          </div>
+          <div class="card-body">
+            <div class="card-title">${g.title}</div>
+            <div class="card-tags">${g.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+            <div class="card-footer">
+              <div class="card-price">${priceHTML(g)}</div>
+              <div onclick="event.stopPropagation()">${btnHTML}</div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function storeBuyChoice(id, btn) {
+    const game = GAMES.find(g => g.id === id);
+    showBuyChoiceModal(game, function(type, friend, msg) {
+      if (type === 'me') {
+        Cart.add(id);
+        btn.textContent = 'En el carrito ✓';
+        btn.className = 'card-btn card-btn-incart';
+        btn.onclick = e => { e.stopPropagation(); window.location = 'cart.html'; };
+        window.location.href = 'cart.html';
+      } else {
+        sessionStorage.setItem('steam_gift', JSON.stringify({ friend, msg, gameTitle: game.title }));
+        Cart.add(id);
+        window.location.href = 'checkout.html';
+      }
+    });
+  }
+
+  function storeGiftGame(id) {
+    const game = GAMES.find(g => g.id === id);
+    showBuyChoiceModal(game, function(type, friend, msg) {
+      if (type === 'friend') {
+        sessionStorage.setItem('steam_gift', JSON.stringify({ friend, msg, gameTitle: game.title }));
+        Cart.add(id);
+        window.location.href = 'checkout.html';
+      }
+    });
+    setTimeout(() => { window._bcForFriend && window._bcForFriend(); }, 30);
+  }
+
+  function toggleWish(id, btn) {
+    const added = Wishlist.toggle(id);
+    btn.textContent = added ? '♥' : '♡';
+    btn.classList.toggle('wished', added);
+    toast(added ? 'Añadido a la wishlist' : 'Eliminado de la wishlist', added ? 'info' : 'error');
+  }
+
+  // External filter triggers from row headers
+  function filterByPrice(val) {
+    document.querySelector(`input[name="price"][value="${val}"]`).checked = true;
+    document.getElementById('games-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderGrid();
+  }
+
+  function sortBy(val) {
+    document.getElementById('sort-select').value = val;
+    document.getElementById('games-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderGrid();
+  }
+
+  // Event listeners
+  document.getElementById('search-input').addEventListener('input', renderGrid);
+  document.querySelectorAll('input[name="price"]').forEach(r => r.addEventListener('change', renderGrid));
+  document.getElementById('sort-select').addEventListener('change', renderGrid);
+  document.getElementById('genre-filters').addEventListener('change', renderGrid);
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    document.getElementById('search-input').value = '';
+    document.querySelector('input[name="price"][value="all"]').checked = true;
+    document.querySelectorAll('#genre-filters input').forEach(i => i.checked = false);
+    document.getElementById('sort-select').value = 'relevance';
+    renderGrid();
+  });
+
+  renderGrid();
+</script>
+</body>
+</html>

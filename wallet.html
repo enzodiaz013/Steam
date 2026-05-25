@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steam — Billetera</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <a class="logo" href="store.html">
+    <svg viewBox="0 0 148 148" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="74" cy="74" r="74" fill="#1b2838"/><path d="M74 18C43.1 18 18 43.1 18 74c0 24.8 15.7 46 37.9 54l13.9-57.4c-1.2-2.3-1.9-4.9-1.9-7.6 0-9.4 7.6-17 17-17s17 7.6 17 17-7.6 17-17 17c-.5 0-1 0-1.5-.1L27.9 93.4C33.4 113.6 52.2 128 74 128c30.9 0 56-25.1 56-56S104.9 18 74 18z" fill="#c6d4df"/><circle cx="85" cy="63" r="10" fill="#1b2838"/></svg>
+    STEAM
+  </a>
+  <nav>
+    <a href="store.html">TIENDA</a>
+    <a href="community.html">COMUNIDAD</a>
+    <a href="dashboard.html">BIBLIOTECA</a>
+    <a href="about.html">ACERCA DE</a>
+    <a href="support.html">SOPORTE</a>
+  </nav>
+  <div class="header-right">
+    <a href="wallet.html" class="wallet-link" id="wallet-balance">💰 $0.00</a>
+    <a href="cart.html" class="cart-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cart-badge" class="cart-badge" style="display:none">0</span>
+    </a>
+    <div id="header-user-zone"></div>
+  </div>
+</header>
+
+<div class="breadcrumb">
+  <a href="store.html">Tienda</a> <span>›</span> <span>Billetera Steam</span>
+</div>
+
+<div class="wallet-wrapper">
+
+  <!-- BALANCE CARD -->
+  <div class="wallet-header-card">
+    <div class="wallet-big-icon">💰</div>
+    <div class="wallet-info">
+      <h2>Mi Billetera Steam</h2>
+      <div class="wallet-amount" id="balance-display">$0.00</div>
+      <div class="wallet-sub">Saldo disponible para compras en Steam</div>
+    </div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px">NIVEL DE CUENTA</div>
+      <div style="font-size:20px;font-weight:700;color:var(--green-light)" id="account-level">Nivel 1</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
+
+    <!-- ADD FUNDS -->
+    <div>
+      <div class="wallet-add-section">
+        <h3>Agregar fondos</h3>
+
+        <div class="amount-grid">
+          <button class="amount-btn" onclick="selectAmount(5)">$5</button>
+          <button class="amount-btn" onclick="selectAmount(10)">$10</button>
+          <button class="amount-btn" onclick="selectAmount(20)">$20</button>
+          <button class="amount-btn" onclick="selectAmount(50)">$50</button>
+          <button class="amount-btn" onclick="selectAmount(100)">$100</button>
+        </div>
+
+        <div class="custom-amount-row">
+          <label>Otro monto:</label>
+          <input type="number" class="custom-amount-input" id="custom-amount" placeholder="0.00" min="1" max="500" step="0.01">
+        </div>
+
+        <div style="font-size:13px;font-weight:700;margin-bottom:14px;color:var(--text-dim)">MÉTODO DE PAGO</div>
+        <div class="card-icons" style="margin-bottom:16px">
+          <span class="card-icon-badge">VISA</span>
+          <span class="card-icon-badge">Mastercard</span>
+          <span class="card-icon-badge">AMEX</span>
+        </div>
+
+        <div class="form-group">
+          <label>Número de tarjeta</label>
+          <input type="text" class="card-input" id="w-card-number" placeholder="0000 0000 0000 0000" maxlength="19">
+        </div>
+        <div class="form-group">
+          <label>Nombre en la tarjeta</label>
+          <input type="text" class="card-input" id="w-card-name" placeholder="NOMBRE APELLIDO">
+        </div>
+        <div style="display:flex;gap:12px">
+          <div class="form-group" style="flex:1">
+            <label>Vencimiento</label>
+            <input type="text" class="card-input" id="w-card-exp" placeholder="MM/AA" maxlength="5">
+          </div>
+          <div class="form-group" style="flex:1">
+            <label>CVV</label>
+            <input type="text" class="card-input" id="w-card-cvv" placeholder="123" maxlength="4">
+          </div>
+        </div>
+
+        <button class="wallet-add-btn" id="add-btn" onclick="addFunds()">AGREGAR $0.00 AL SALDO</button>
+
+        <p style="font-size:11px;color:var(--text-dim);margin-top:12px;text-align:center">
+          🔒 Pago seguro con cifrado SSL. El saldo Steam no expira y no es reembolsable.
+        </p>
+      </div>
+    </div>
+
+    <!-- TRANSACTION HISTORY -->
+    <div>
+      <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px">Historial de transacciones</h3>
+      <div class="tx-list" id="tx-list">
+        <p style="color:var(--text-dim);font-size:13px;text-align:center;padding:20px">No hay transacciones aún.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><p>&copy; 2024 Valve Corporation. Todos los derechos reservados.</p></footer>
+
+<script src="games.js"></script>
+<script>
+  if (!Session.isLoggedIn()) window.location.href = 'index.html';
+  initHeader();
+
+  let selectedAmt = 0;
+
+  function updateBalance() {
+    const b = Wallet.get();
+    document.getElementById('balance-display').textContent = `$${b.toFixed(2)}`;
+    // Level based on balance
+    const level = b < 20 ? 1 : b < 50 ? 2 : b < 100 ? 3 : b < 200 ? 4 : 5;
+    document.getElementById('account-level').textContent = `Nivel ${level}`;
+  }
+
+  function selectAmount(amt) {
+    selectedAmt = amt;
+    document.getElementById('custom-amount').value = '';
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('add-btn').textContent = `AGREGAR $${amt.toFixed(2)} AL SALDO`;
+  }
+
+  document.getElementById('custom-amount').addEventListener('input', function() {
+    const v = parseFloat(this.value) || 0;
+    selectedAmt = v;
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('add-btn').textContent = v > 0 ? `AGREGAR $${v.toFixed(2)} AL SALDO` : 'AGREGAR $0.00 AL SALDO';
+  });
+
+  document.getElementById('w-card-number').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'').substring(0,16);
+    this.value = v.replace(/(.{4})/g,'$1 ').trim();
+  });
+
+  document.getElementById('w-card-exp').addEventListener('input', function() {
+    let v = this.value.replace(/\D/g,'').substring(0,4);
+    if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
+    this.value = v;
+  });
+
+  function addFunds() {
+    if (selectedAmt <= 0) { toast('Seleccioná un monto', 'error'); return; }
+    const num  = document.getElementById('w-card-number').value.replace(/\s/g,'');
+    const name = document.getElementById('w-card-name').value.trim();
+    const exp  = document.getElementById('w-card-exp').value;
+    const cvv  = document.getElementById('w-card-cvv').value;
+
+    if (num.length < 16 || !name || exp.length < 5 || cvv.length < 3) {
+      toast('Completá todos los datos de la tarjeta', 'error');
+      return;
+    }
+
+    Wallet.add(selectedAmt);
+
+    // Save transaction
+    const txs = JSON.parse(localStorage.getItem('steam_transactions') || '[]');
+    txs.unshift({ type: 'add', amount: selectedAmt, label: `Recarga de saldo`, date: new Date().toLocaleDateString('es-AR') });
+    localStorage.setItem('steam_transactions', JSON.stringify(txs.slice(0, 20)));
+
+    updateBalance();
+    renderTx();
+
+    // Reset form
+    document.getElementById('w-card-number').value = '';
+    document.getElementById('w-card-name').value = '';
+    document.getElementById('w-card-exp').value = '';
+    document.getElementById('w-card-cvv').value = '';
+    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+    selectedAmt = 0;
+    document.getElementById('add-btn').textContent = 'AGREGAR $0.00 AL SALDO';
+
+    toast(`✓ Se agregaron $${parseFloat(arguments[0] || selectedAmt).toFixed(2)} a tu saldo`, 'success');
+  }
+
+  function renderTx() {
+    const txs = JSON.parse(localStorage.getItem('steam_transactions') || '[]');
+    const list = document.getElementById('tx-list');
+    if (txs.length === 0) {
+      list.innerHTML = '<p style="color:var(--text-dim);font-size:13px;text-align:center;padding:20px">No hay transacciones aún.</p>';
+      return;
+    }
+    list.innerHTML = txs.map(tx => `
+      <div class="tx-item">
+        <span class="tx-icon">${tx.type === 'add' ? '📥' : '🎮'}</span>
+        <div class="tx-desc">
+          <div class="tx-title">${tx.label}</div>
+          <div class="tx-date">${tx.date}</div>
+        </div>
+        <span class="${tx.amount > 0 ? 'tx-amount-pos' : 'tx-amount-neg'}">
+          ${tx.amount > 0 ? '+' : ''}$${Math.abs(tx.amount).toFixed(2)}
+        </span>
+      </div>`).join('');
+  }
+
+  updateBalance();
+  renderTx();
+</script>
+</body>
+</html>

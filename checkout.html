@@ -17,11 +17,8 @@
     <a href="store.html">TIENDA</a>
     <a href="community.html">COMUNIDAD</a>
     <a href="dashboard.html">BIBLIOTECA</a>
-    <a href="about.html">ACERCA DE</a>
-    <a href="support.html">SOPORTE</a>
   </nav>
   <div class="header-right">
-    <a href="wallet.html" class="wallet-link" id="wallet-balance">💰 $0.00</a>
     <a href="cart.html" class="cart-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span id="cart-badge" class="cart-badge" style="display:none">0</span>
@@ -60,45 +57,16 @@
 
     <!-- LEFT: PAYMENT -->
     <div class="checkout-left">
-      <h2 style="font-size:20px;font-weight:700;margin-bottom:20px">Seleccioná un método de pago</h2>
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:20px">Datos de pago</h2>
 
-      <!-- Payment tabs -->
-      <div class="payment-tabs">
-        <div class="payment-tab active" id="tab-wallet" onclick="selectTab('wallet')">
-          <div class="payment-tab-icon">🎮</div>
-          <div class="payment-tab-label">Saldo Steam</div>
-          <div class="payment-tab-sub" id="tab-wallet-sub">Cargando...</div>
-        </div>
-        <div class="payment-tab" id="tab-card" onclick="selectTab('card')">
-          <div class="payment-tab-icon">💳</div>
-          <div class="payment-tab-label">Tarjeta de crédito/débito</div>
-          <div class="payment-tab-sub">Visa, Mastercard, Amex</div>
-        </div>
-      </div>
-
-      <!-- WALLET PANEL -->
-      <div class="wallet-panel" id="wallet-panel">
-        <div class="wallet-balance-display">
-          <div class="wallet-icon-big">💰</div>
-          <div class="wallet-balance-text">
-            <div class="amount" id="wallet-display">$0.00</div>
-            <div class="label">Saldo Steam disponible</div>
-          </div>
-        </div>
-        <div class="wallet-alert" id="wallet-alert">
-          ⚠️ Saldo insuficiente. Necesitás <strong id="needed-amount"></strong> más.
-          <a href="wallet.html" style="color:#e87c7c;margin-left:8px;text-decoration:underline">Recargar saldo →</a>
-        </div>
+      <div class="card-icons" style="margin-bottom:16px">
+        <span class="card-icon-badge">VISA</span>
+        <span class="card-icon-badge">Mastercard</span>
+        <span class="card-icon-badge">AMEX</span>
       </div>
 
       <!-- CARD PANEL -->
-      <div class="card-panel" id="card-panel">
-        <div class="card-icons">
-          <span class="card-icon-badge">VISA</span>
-          <span class="card-icon-badge">Mastercard</span>
-          <span class="card-icon-badge">AMEX</span>
-        </div>
-
+      <div id="card-panel">
         <div class="form-group">
           <label>Número de tarjeta</label>
           <input type="text" class="card-input" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19">
@@ -131,10 +99,6 @@
           </select>
         </div>
 
-        <label class="filter-check" style="margin-top:12px">
-          <input type="checkbox" id="save-card" accent-color="#1a9fff">
-          Guardar esta tarjeta para futuras compras
-        </label>
       </div>
 
       <p style="font-size:12px;color:var(--text-dim);margin-top:16px">
@@ -145,11 +109,6 @@
     <!-- RIGHT: ORDER SUMMARY -->
     <div class="checkout-right">
       <div class="checkout-summary">
-        <div id="gift-banner" style="display:none;background:linear-gradient(135deg,rgba(123,78,158,.25),rgba(90,50,128,.15));border:1px solid #7b4e9e;border-radius:6px;padding:12px 14px;margin-bottom:14px">
-          <div style="font-size:13px;font-weight:700;color:#d4a8ff;margin-bottom:4px">🎁 Comprando como regalo</div>
-          <div style="font-size:12px;color:var(--text-dim)">Para: <strong id="gift-banner-friend" style="color:#e0c8ff"></strong></div>
-          <div id="gift-banner-msg" style="font-size:12px;color:var(--text-dim);margin-top:3px;font-style:italic"></div>
-        </div>
         <h3>Resumen del pedido</h3>
         <div id="co-items"></div>
         <div class="co-divider"></div>
@@ -179,7 +138,7 @@
   </div>
 </div>
 
-<footer><p>&copy; 2024 Valve Corporation. Todos los derechos reservados.</p></footer>
+<footer><p>&copy; 2026 Valve Corporation. Todos los derechos reservados.</p></footer>
 
 <script src="games.js"></script>
 <script>
@@ -187,16 +146,6 @@
   if (!Session.isLoggedIn()) window.location.href = 'index.html';
 
   initHeader();
-
-  let selectedMethod = 'wallet';
-
-  // Show gift banner if coming from a gift purchase
-  const giftData = (() => { try { return JSON.parse(sessionStorage.getItem('steam_gift')); } catch(e) { return null; } })();
-  if (giftData) {
-    document.getElementById('gift-banner').style.display = 'block';
-    document.getElementById('gift-banner-friend').textContent = giftData.friend;
-    if (giftData.msg) document.getElementById('gift-banner-msg').textContent = `"${giftData.msg}"`;
-  }
 
   // Populate order summary
   const items = Cart.get();
@@ -214,46 +163,10 @@
 
   document.getElementById('co-total').textContent = `$${total.toFixed(2)}`;
 
-  // Wallet display
-  function updateWalletDisplay() {
-    const balance = Wallet.get();
-    document.getElementById('wallet-display').textContent = `$${balance.toFixed(2)}`;
-    document.getElementById('tab-wallet-sub').textContent = `Saldo: $${balance.toFixed(2)}`;
-    const confirmBtn = document.getElementById('confirm-btn');
-    const alert = document.getElementById('wallet-alert');
-    if (selectedMethod === 'wallet') {
-      if (balance < total) {
-        const needed = (total - balance).toFixed(2);
-        document.getElementById('needed-amount').textContent = `$${needed}`;
-        alert.classList.add('show');
-        confirmBtn.disabled = true;
-      } else {
-        alert.classList.remove('show');
-        confirmBtn.disabled = false;
-      }
-    }
-  }
-
-  updateWalletDisplay();
-
-  function selectTab(method) {
-    selectedMethod = method;
-    document.getElementById('tab-wallet').classList.toggle('active', method === 'wallet');
-    document.getElementById('tab-card').classList.toggle('active', method === 'card');
-    document.getElementById('wallet-panel').style.display = method === 'wallet' ? 'block' : 'none';
-    document.getElementById('card-panel').classList.toggle('show', method === 'card');
-    const btn = document.getElementById('confirm-btn');
-    btn.disabled = false;
-    document.getElementById('wallet-alert').classList.remove('show');
-    if (method === 'wallet') updateWalletDisplay();
-  }
-
-  // Card number formatting
   document.getElementById('card-number').addEventListener('input', function() {
     let v = this.value.replace(/\D/g, '').substring(0, 16);
     this.value = v.replace(/(.{4})/g, '$1 ').trim();
   });
-
   document.getElementById('card-exp').addEventListener('input', function() {
     let v = this.value.replace(/\D/g, '').substring(0, 4);
     if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
@@ -261,39 +174,21 @@
   });
 
   function processPayment() {
-    if (selectedMethod === 'wallet') {
-      const success = Wallet.deduct(total);
-      if (!success) { toast('Saldo insuficiente', 'error'); return; }
-    } else {
-      // Card validation
-      const num  = document.getElementById('card-number').value.replace(/\s/g,'');
-      const name = document.getElementById('card-name').value.trim();
-      const exp  = document.getElementById('card-exp').value;
-      const cvv  = document.getElementById('card-cvv').value;
-      if (num.length < 16 || !name || exp.length < 5 || cvv.length < 3) {
-        toast('Completá todos los datos de la tarjeta', 'error');
-        return;
-      }
+    const num  = document.getElementById('card-number').value.replace(/\s/g,'');
+    const name = document.getElementById('card-name').value.trim();
+    const exp  = document.getElementById('card-exp').value;
+    const cvv  = document.getElementById('card-cvv').value;
+    if (num.length < 16 || !name || exp.length < 5 || cvv.length < 3) {
+      toast('Completá todos los datos de la tarjeta', 'error');
+      return;
     }
 
-    // Save to library
     const library = JSON.parse(localStorage.getItem('steam_library') || '[]');
     games.forEach(g => { if (!library.find(l => l.id === g.id)) library.push({ id: g.id }); });
     localStorage.setItem('steam_library', JSON.stringify(library));
 
-    // Save transaction
-    const txs = JSON.parse(localStorage.getItem('steam_transactions') || '[]');
-    txs.unshift({ type: 'purchase', amount: -total, label: `Compra: ${games.map(g=>g.title).join(', ')}`, date: new Date().toLocaleDateString('es-AR') });
-    localStorage.setItem('steam_transactions', JSON.stringify(txs.slice(0, 20)));
-
     Cart.clear();
-    sessionStorage.removeItem('steam_gift');
-
-    // Show success
-    const successMsg = giftData
-      ? games.map(g => `<li>🎁 ${g.title} — regalo enviado a <strong>${giftData.friend}</strong></li>`).join('')
-      : games.map(g => `<li>🎮 ${g.title}</li>`).join('');
-    document.getElementById('purchased-list').innerHTML = successMsg;
+    document.getElementById('purchased-list').innerHTML = games.map(g => `<li>🎮 ${g.title}</li>`).join('');
     document.getElementById('success-overlay').classList.add('show');
   }
 </script>

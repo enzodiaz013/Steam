@@ -17,12 +17,8 @@
     <a href="store.html">TIENDA</a>
     <a href="community.html">COMUNIDAD</a>
     <a href="dashboard.html" class="active">BIBLIOTECA</a>
-    <a href="about.html">ACERCA DE</a>
-    <a href="support.html">SOPORTE</a>
   </nav>
   <div class="header-right">
-    <a href="wallet.html" class="wallet-link" id="wallet-balance">💰 $0.00</a>
-    <a href="wishlist.html" class="wishlist-link">♡ <span id="wishlist-count" class="wishlist-count" style="display:none">0</span></a>
     <a href="cart.html" class="cart-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span id="cart-badge" class="cart-badge" style="display:none">0</span>
@@ -33,105 +29,87 @@
 
 <div class="page-wrap" style="margin-top:24px" id="library-content"></div>
 
-<footer><p>&copy; 2024 Valve Corporation. Todos los derechos reservados.</p></footer>
+<footer><p>&copy; 2026 Valve Corporation. Todos los derechos reservados.</p></footer>
 
 <script src="games.js"></script>
 <script>
   if (!Session.isLoggedIn()) window.location.href = 'index.html';
   initHeader();
 
-  const session = Session.get();
-
-  let filterMode = 'all';
-  let searchQ = '';
-
   function getLibraryGames() {
     const purchasedIds = JSON.parse(localStorage.getItem('steam_library') || '[]').map(i => i.id);
-    const freeIds = GAMES.filter(g => g.free).map(g => g.id);
-    return [...new Set([...freeIds, ...purchasedIds])].map(id => GAMES.find(g => g.id === id)).filter(Boolean);
+    return purchasedIds.map(id => GAMES.find(g => g.id === id)).filter(Boolean);
   }
 
   function render() {
-    const all = getLibraryGames();
-    let games = all;
-    if (filterMode === 'free') games = games.filter(g => g.free);
-    if (filterMode === 'paid') games = games.filter(g => !g.free);
-    if (searchQ) games = games.filter(g => g.title.toLowerCase().includes(searchQ.toLowerCase()));
-
-    const avatarColor = localStorage.getItem('steam_avatar_color') || '#1a6496';
-    const initial = session.username.charAt(0).toUpperCase();
-
+    const games = getLibraryGames();
     document.getElementById('library-content').innerHTML = `
-      <div style="display:grid;grid-template-columns:240px 1fr;gap:24px;align-items:start">
-
-        <!-- SIDEBAR -->
-        <div>
-          <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:20px;margin-bottom:16px;text-align:center">
-            <div style="width:64px;height:64px;border-radius:50%;background:${avatarColor};display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:0 auto 12px">
-              ${initial}
-            </div>
-            <div style="font-size:16px;font-weight:700;margin-bottom:4px">${session.username}</div>
-            <div style="font-size:12px;color:var(--teal);margin-bottom:14px">● En línea</div>
-            <a href="profile.html" class="btn-blue" style="display:block;padding:8px;font-size:12px;text-align:center">Ver perfil completo</a>
-          </div>
-
-          <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;overflow:hidden">
-            <div style="padding:12px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);border-bottom:1px solid var(--border)">Filtrar biblioteca</div>
-            <button class="lib-filter-btn ${filterMode==='all'?'active':''}" onclick="setFilter('all')">Todos los juegos (${all.length})</button>
-            <button class="lib-filter-btn ${filterMode==='paid'?'active':''}" onclick="setFilter('paid')">Comprados (${all.filter(g=>!g.free).length})</button>
-            <button class="lib-filter-btn ${filterMode==='free'?'active':''}" onclick="setFilter('free')">Gratuitos (${all.filter(g=>g.free).length})</button>
-          </div>
-
-          <div style="margin-top:12px">
-            <a href="store.html" class="btn-green" style="display:block;padding:10px;font-size:13px;text-align:center">+ Explorar tienda</a>
-          </div>
-        </div>
-
-        <!-- MAIN -->
-        <div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-            <h1 style="font-size:22px;font-weight:700">Tu biblioteca</h1>
-            <input type="text" class="filter-search" placeholder="Buscar en biblioteca..." style="width:220px" oninput="setSearch(this.value)" value="${searchQ}">
-          </div>
-
-          ${games.length === 0 ? `
-            <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:48px;text-align:center">
-              <div style="font-size:48px;margin-bottom:16px">🎮</div>
-              <h3 style="margin-bottom:8px">${searchQ ? 'Sin resultados' : 'No tenés juegos aún'}</h3>
-              <p style="color:var(--text-dim);font-size:13px;margin-bottom:20px">${searchQ ? 'Probá con otro término.' : 'Explorá la tienda y encontrá tu próximo juego favorito.'}</p>
-              <a href="store.html" class="btn-blue" style="display:inline-block;padding:11px 28px;font-size:13px">IR A LA TIENDA</a>
-            </div>` : `
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px">
-            ${games.map(g => `
+      <div style="max-width:1100px;margin:0 auto;padding:0 16px">
+        <h1 style="font-size:22px;font-weight:700;margin-bottom:20px">Tu biblioteca</h1>
+        ${games.length === 0 ? `
+          <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:48px;text-align:center">
+            <div style="font-size:48px;margin-bottom:16px">🎮</div>
+            <h3 style="margin-bottom:8px">No tenés juegos aún</h3>
+            <p style="color:var(--text-dim);font-size:13px;margin-bottom:20px">Explorá la tienda y encontrá tu próximo juego favorito.</p>
+            <a href="store.html" class="btn-blue" style="display:inline-block;padding:11px 28px;font-size:13px">IR A LA TIENDA</a>
+          </div>` : `
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px">
+          ${games.map(g => {
+            const installed = isInstalled(g.id);
+            return `
               <div class="lib-game-card">
-                <div style="position:relative;overflow:hidden">
-                  <img src="${g.image}" alt="${g.title}" onclick="window.location='game.html?id=${g.id}'" onerror="this.style.background='#1e3a52'" style="cursor:pointer">
-                  <button class="lib-play-btn" onclick="launchGame('${g.title.replace(/'/g,"\\'")}','${g.image}')">▶ Jugar ahora</button>
-                </div>
+                <img src="${g.image}" alt="${g.title}" onclick="window.location='game.html?id=${g.id}'" onerror="this.style.background='#1e3a52'" style="cursor:pointer">
                 <div class="lib-game-info">
                   <div class="lib-game-title" onclick="window.location='game.html?id=${g.id}'" style="cursor:pointer">${g.title}</div>
-                  <div class="lib-game-sub">${g.free ? '🆓 Gratuito' : '✅ Comprado'}</div>
+                  ${installed
+                    ? `<button class="lib-play-btn-inline" onclick="launchGame('${g.title.replace(/'/g,"\\'")}','${g.image}')">▶ Jugar ahora</button>`
+                    : `<button class="lib-install-btn" onclick="installGame(${g.id},'${g.title.replace(/'/g,"\\'")}','${g.image}')">⬇ Instalar</button>`}
                 </div>
-              </div>`).join('')}
-          </div>`}
-        </div>
+              </div>`;
+          }).join('')}
+        </div>`}
       </div>
     `;
   }
 
-  function setFilter(mode) {
-    filterMode = mode;
-    render();
-  }
+  function installGame(id, title, img) {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)';
+    overlay.innerHTML = `
+      <div style="text-align:center;max-width:460px;padding:20px">
+        <img src="${img}" alt="${title}" style="width:280px;border-radius:8px;margin-bottom:24px;box-shadow:0 8px 40px rgba(0,0,0,.6)" onerror="this.style.display='none'">
+        <div style="font-size:22px;font-weight:700;margin-bottom:8px">${title}</div>
+        <div style="background:var(--border);border-radius:4px;height:6px;margin:16px 0;overflow:hidden">
+          <div id="inst-bar" style="height:100%;width:0%;background:var(--blue);transition:width .5s ease"></div>
+        </div>
+        <div id="inst-status" style="font-size:12px;color:var(--teal);font-weight:600">Preparando instalación...</div>
+        <button id="inst-btn" onclick="this.closest('div[style]').remove()" style="margin-top:28px;background:none;border:1px solid var(--border);color:var(--text-dim);padding:9px 24px;border-radius:3px;cursor:pointer;font-size:13px">Cancelar</button>
+      </div>`;
+    document.body.appendChild(overlay);
 
-  function setSearch(q) {
-    searchQ = q;
-    render();
+    const steps = [[15,'Verificando archivos...'],[40,'Descargando contenido...'],[70,'Instalando archivos...'],[90,'Aplicando actualizaciones...'],[100,'¡Instalación completa!']];
+    let i = 0;
+    const iv = setInterval(() => {
+      if (i >= steps.length) { clearInterval(iv); return; }
+      const [pct, msg] = steps[i++];
+      document.getElementById('inst-bar').style.width = pct + '%';
+      document.getElementById('inst-status').textContent = msg;
+      if (pct === 100) {
+        clearInterval(iv);
+        const list = JSON.parse(localStorage.getItem('steam_installed') || '[]');
+        if (!list.find(x => x.id === id)) { list.push({id}); localStorage.setItem('steam_installed', JSON.stringify(list)); }
+        document.getElementById('inst-status').style.color = 'var(--green-light)';
+        const btn = document.getElementById('inst-btn');
+        btn.textContent = 'Cerrar';
+        btn.onclick = () => { overlay.remove(); render(); };
+      }
+    }, 900);
+
+    overlay.addEventListener('click', e => { if (e.target === overlay) { clearInterval(iv); overlay.remove(); } });
   }
 
   function launchGame(title, img) {
     const overlay = document.createElement('div');
-    overlay.id = 'launch-overlay';
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)';
     overlay.innerHTML = `
       <div style="text-align:center;max-width:460px;padding:20px">
@@ -140,11 +118,11 @@
         <div style="font-size:13px;color:var(--text-dim);margin-bottom:28px">Steam está preparando el juego...</div>
         <div class="launch-spinner"></div>
         <div id="launch-status" style="font-size:12px;color:var(--teal);margin-top:20px;font-weight:600">Iniciando Steam...</div>
-        <button onclick="document.getElementById('launch-overlay').remove()" style="margin-top:28px;background:none;border:1px solid var(--border);color:var(--text-dim);padding:9px 24px;border-radius:3px;cursor:pointer;font-size:13px">Cancelar</button>
+        <button onclick="this.closest('div[style]').remove()" style="margin-top:28px;background:none;border:1px solid var(--border);color:var(--text-dim);padding:9px 24px;border-radius:3px;cursor:pointer;font-size:13px">Cancelar</button>
       </div>`;
     document.body.appendChild(overlay);
 
-    const steps = ['Iniciando Steam...', 'Verificando archivos...', 'Aplicando actualizaciones...', '¡Lanzando juego!'];
+    const steps = ['Iniciando Steam...','Verificando archivos...','Aplicando actualizaciones...','¡Lanzando juego!'];
     let i = 0;
     const iv = setInterval(() => {
       i++;
@@ -154,7 +132,7 @@
         clearInterval(iv);
         document.getElementById('launch-status').textContent = '✓ ¡Juego en proceso!';
         document.getElementById('launch-status').style.color = 'var(--green-light)';
-        document.querySelector('#launch-overlay button').textContent = 'Cerrar';
+        overlay.querySelector('button').textContent = 'Cerrar';
       }
     }, 1200);
 
@@ -165,36 +143,33 @@
 </script>
 
 <style>
-  .lib-filter-btn {
-    display: block; width: 100%; text-align: left;
-    background: none; border: none; color: var(--text-dim);
-    font-size: 13px; padding: 11px 16px; cursor: pointer;
-    border-left: 2px solid transparent; transition: all .15s;
-  }
-  .lib-filter-btn:hover { color: var(--text); background: rgba(255,255,255,.04); }
-  .lib-filter-btn.active { color: var(--text); border-left-color: var(--blue); background: rgba(26,159,255,.08); }
-
   .lib-game-card {
     background: var(--panel2); border: 1px solid var(--border);
     border-radius: 4px; overflow: hidden;
     transition: border-color .15s, transform .15s;
   }
   .lib-game-card:hover { border-color: var(--blue-light); transform: translateY(-2px); }
-  .lib-game-card:hover .lib-play-btn { opacity: 1; }
   .lib-game-card img { width: 100%; height: 94px; object-fit: cover; display: block; }
   .lib-game-info { padding: 10px 12px; }
-  .lib-game-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  .lib-game-sub { font-size: 11px; color: var(--text-dim); }
+  .lib-game-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; }
 
-  .lib-play-btn {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(0deg, rgba(0,0,0,.85) 0%, transparent 100%);
-    border: none; color: #fff; font-size: 13px; font-weight: 700;
-    padding: 18px 0 10px; cursor: pointer; opacity: 0;
-    transition: opacity .2s; width: 100%; text-align: center;
-    letter-spacing: .5px;
+  .lib-play-btn-inline {
+    display: block; width: 100%; padding: 7px 0;
+    background: var(--blue); border: none; border-radius: 3px;
+    color: #fff; font-size: 12px; font-weight: 700;
+    cursor: pointer; text-align: center; letter-spacing: .4px;
+    transition: background .15s;
   }
-  .lib-play-btn:hover { background: linear-gradient(0deg,rgba(26,159,255,.7) 0%,transparent 100%); }
+  .lib-play-btn-inline:hover { background: var(--blue-light); }
+
+  .lib-install-btn {
+    display: block; width: 100%; padding: 7px 0;
+    background: var(--green); border: none; border-radius: 3px;
+    color: #fff; font-size: 12px; font-weight: 700;
+    cursor: pointer; text-align: center; letter-spacing: .4px;
+    transition: background .15s;
+  }
+  .lib-install-btn:hover { background: var(--green-light); }
 
   .launch-spinner {
     width: 40px; height: 40px; border: 3px solid var(--border);

@@ -38,10 +38,10 @@
     <!-- AGREGAR AMIGO -->
     <div style="background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:24px">
       <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px">➕ Agregar amigo</h3>
-      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Ingresá el nombre de usuario o el código Steam de tu amigo.</p>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Ingresá el nombre de usuario de tu amigo.</p>
       <div style="margin-bottom:12px">
-        <label style="font-size:12px;color:var(--text-dim);display:block;margin-bottom:6px">Nombre de usuario o código Steam</label>
-        <input type="text" id="friend-input" class="filter-search" style="width:100%;padding:10px 14px;font-size:13px" placeholder="ej: Matigamer99 o 76561198...">
+        <label style="font-size:12px;color:var(--text-dim);display:block;margin-bottom:6px">Nombre de usuario</label>
+        <input type="text" id="friend-input" class="filter-search" style="width:100%;padding:10px 14px;font-size:13px" placeholder="ej: Matigamer99">
       </div>
       <button class="btn-blue" style="width:100%;padding:11px;font-size:13px" onclick="sendRequest()">Enviar solicitud de amistad</button>
       <p style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:10px">El jugador recibirá una notificación para aceptar.</p>
@@ -130,7 +130,6 @@
             </div>
             <div style="display:flex;align-items:center;gap:8px">
               <span style="font-size:11px;color:var(--text-dim)">Pendiente...</span>
-              <button onclick="cancelRequest('${name}')" style="background:none;border:1px solid var(--border);color:var(--text-dim);font-size:11px;padding:3px 8px;border-radius:3px;cursor:pointer">Cancelar</button>
             </div>
           </div>`).join('')}
       </div>`;
